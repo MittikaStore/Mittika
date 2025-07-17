@@ -413,24 +413,24 @@
       color: #3e2723;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
-    .cart-table {
+    .cart-table, .checkout-table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 25px;
     }
-    .cart-table th, .cart-table td {
+    .cart-table th, .cart-table td, .checkout-table th, .checkout-table td {
       padding: 18px;
       text-align: left;
       border-bottom: 3px solid #ffb300;
     }
-    .cart-table tr:nth-child(even) {
+    .cart-table tr:nth-child(even), .checkout-table tr:nth-child(even) {
       background-color: #fff8e6;
     }
-    .cart-table tr:hover {
+    .cart-table tr:hover, .checkout-table tr:hover {
       background-color: #ffebcc;
       transition: background-color 0.3s;
     }
-    .cart-table th {
+    .cart-table th, .checkout-table th {
       background: linear-gradient(135deg, #ff5722, #ffb300);
       color: white;
     }
@@ -687,9 +687,17 @@
       .cart-section, .checkout-section, .order-confirmation, .contact {
         padding: 30px;
       }
-      .cart-table th, .cart-table td {
+      .cart-table th, .cart-table td, .checkout-table th, .checkout-table td {
         padding: 12px;
         font-size: 1em;
+      }
+      .checkout-section .sticky-total {
+        position: sticky;
+        bottom: 20px;
+        background: #fff3e0;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
       }
     }
   </style>
@@ -705,7 +713,6 @@
     <button class="shop-now-btn" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Shop Now</button>
   </header>
   <div class="hero-banner">
-    <!-- Split text into spans for letter-by-letter animation -->
     <span>R</span><span>a</span><span>k</span><span>s</span><span>h</span><span>a</span><span> </span>
     <span>B</span><span>a</span><span>n</span><span>d</span><span>h</span><span>a</span><span>n</span><span> </span>
     <span>S</span><span>p</span><span>e</span><span>c</span><span>i</span><span>a</span><span>l</span><span>:</span><span> </span>
@@ -845,7 +852,7 @@
         </thead>
         <tbody id="cart-items"></tbody>
       </table>
-      <p class="cart-total">Total: ₹<span id="cart-total">0</span></p>
+      <p class="cart-total">Product Total: ₹<span id="cart-total">0</span></p>
       <button class="checkout-btn" onclick="showCheckout()">Proceed to Checkout</button>
     </section>
     <section id="checkout" class="checkout-section" style="display: none;">
@@ -853,7 +860,40 @@
       <form id="checkout-form">
         <input type="text" id="name" placeholder="Full Name" required>
         <input type="tel" id="phone" placeholder="Phone Number" required>
+        <input type="text" id="pincode" placeholder="Delivery Pincode (e.g., 421301)" required>
         <textarea id="address" placeholder="Delivery Address" required></textarea>
+        <label>
+          <input type="checkbox" id="cod" onclick="updateCheckoutSummary()"> Cash on Delivery (₹10 extra)
+        </label>
+        <table class="checkout-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Product Total</td>
+              <td>₹<span id="checkout-product-total">0</span></td>
+            </tr>
+            <tr>
+              <td>Delivery Charge</td>
+              <td>₹<span id="delivery-charge">0</span></td>
+            </tr>
+            <tr>
+              <td>COD Fee</td>
+              <td>₹<span id="cod-fee">0</span></td>
+            </tr>
+            <tr>
+              <td><strong>Final Total</strong></td>
+              <td><strong>₹<span id="final-total">0</span></strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="sticky-total" style="display: none;">
+          <p><strong>Final Total: ₹<span id="mobile-final-total">0</span></strong></p>
+        </div>
         <button type="submit">Place Order</button>
       </form>
     </section>
@@ -879,6 +919,11 @@
   </footer>
   <script>
     let cart = [];
+    const BASE = 48;
+    const PER_KM = 8;
+    const COD_FEE = 10;
+    const PICKUP_PINCODE = '421302';
+
     function addToCart(productName, price) {
       const existingItem = cart.find(item => item.name === productName);
       if (existingItem) {
@@ -920,6 +965,36 @@
       cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
       document.getElementById('cart').style.display = cart.length ? 'block' : 'none';
     }
+    function getDeliveryCharge(distanceKm) {
+      return Math.ceil(BASE + distanceKm * PER_KM);
+    }
+    async function calculateDistance(deliveryPincode) {
+      // Placeholder for Google Distance Matrix API
+      // Replace with actual API call: https://developers.google.com/maps/documentation/distance-matrix
+      // For demo, assume distances based on Sidra's examples
+      const pincodeDistances = {
+        '421301': 5,  // 5km
+        '421303': 8,  // 8km
+        '421304': 10, // 10km
+        '421305': 15  // 15km
+      };
+      return pincodeDistances[deliveryPincode] || 5; // Default 5km if pincode not found
+    }
+    async function updateCheckoutSummary() {
+      const pincode = document.getElementById('pincode').value;
+      const cod = document.getElementById('cod').checked;
+      const productTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const distance = await calculateDistance(pincode);
+      const deliveryCharge = getDeliveryCharge(distance);
+      const codFee = cod ? COD_FEE : 0;
+      const finalTotal = productTotal + deliveryCharge + codFee;
+
+      document.getElementById('checkout-product-total').textContent = productTotal;
+      document.getElementById('delivery-charge').textContent = deliveryCharge;
+      document.getElementById('cod-fee').textContent = codFee;
+      document.getElementById('final-total').textContent = finalTotal;
+      document.getElementById('mobile-final-total').textContent = finalTotal;
+    }
     function showCheckout() {
       if (cart.length === 0) {
         alert('Your cart is empty!');
@@ -931,6 +1006,7 @@
       document.getElementById('offers').style.display = 'none';
       document.getElementById('gift-hampers').style.display = 'none';
       document.getElementById('order-confirmation').style.display = 'none';
+      updateCheckoutSummary();
     }
     function sendToWhatsApp() {
       const orderDetails = document.getElementById('order-details').innerText;
@@ -952,14 +1028,20 @@
       navLinks.classList.toggle('active');
       hamburger.classList.toggle('active');
     }
-    document.getElementById('checkout-form').addEventListener('submit', (e) => {
+    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('name').value;
       const phone = document.getElementById('phone').value;
+      const pincode = document.getElementById('pincode').value;
       const address = document.getElementById('address').value;
+      const cod = document.getElementById('cod').checked;
+      const productTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const distance = await calculateDistance(pincode);
+      const deliveryCharge = getDeliveryCharge(distance);
+      const codFee = cod ? COD_FEE : 0;
+      const finalTotal = productTotal + deliveryCharge + codFee;
       const orderDetails = cart.map(item => `${item.name} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
-      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      const orderSummary = `Name: ${name}\nPhone: ${phone}\nLocation: ${address}\nItems: ${orderDetails}\nTotal: ₹${total}`;
+      const orderSummary = `Name: ${name}\nPhone: ${phone}\nPincode: ${pincode}\nLocation: ${address}\nItems: ${orderDetails}\nProduct Total: ₹${productTotal}\nDelivery (${distance}km): ₹${deliveryCharge}\nCOD Fee: ₹${codFee}\nFinal Total: ₹${finalTotal}`;
       document.getElementById('order-details').innerText = orderSummary;
       document.getElementById('checkout').style.display = 'none';
       document.getElementById('order-confirmation').style.display = 'block';
@@ -970,6 +1052,8 @@
       updateCart();
       document.getElementById('checkout-form').reset();
     });
+    document.getElementById('pincode').addEventListener('input', updateCheckoutSummary);
+    document.getElementById('cod').addEventListener('change', updateCheckoutSummary);
     window.addEventListener('scroll', () => {
       const nav = document.querySelector('nav');
       if (window.scrollY > 50) {
