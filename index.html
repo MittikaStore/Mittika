@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mittika - Sacred Puja Essentials & Rakhi Gifts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #fff3e0, #ffdab9), url('https://via.placeholder.com/1920x1080?text=Rakhi+Pattern') no-repeat center center fixed;
+      background-size: cover;
+      background-blend-mode: overlay;
+      color: #4a2c00;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #ff6f00, #ffd54f), url('https://via.placeholder.com/1920x300?text=Rakhi+Motif') no-repeat center center;
+      background-size: cover;
+      background-attachment: fixed;
+      color: white;
+      text-align: center;
+      padding: 120px 20px;
+      border-bottom: 8px solid #8b0000;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 1.8s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    header h1 {
+      font-size: 3.8em;
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.4);
+      position: relative;
+      display: inline-block;
+    }
+    header h1::before {
+      content: '🪢';
+      font-size: 0.6em;
+      position: absolute;
+      top: -10px;
+      left: -30px;
+      animation: rotateRakhi 6s linear infinite;
+    }
+    @keyframes rotateRakhi {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    header .tagline-slider {
+      font-size: 1.5em;
+      font-weight: 300;
+      margin-bottom: 20px;
+      min-height: 30px;
+    }
+    header .tagline {
+      opacity: 0;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      animation: fadeTagline 9s infinite;
+    }
+    header .tagline:nth-child(1) { animation-delay: 0s; }
+    header .tagline:nth-child(2) { animation-delay: 3s; }
+    header .tagline:nth-child(3) { animation-delay: 6s; }
+    @keyframes fadeTagline {
+      0% { opacity: 0; transform: translateY(10px); }
+      11%, 33% { opacity: 1; transform: translateY(0); }
+      44% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 0; }
+    }
+    header .shop-now-btn {
+      background: linear-gradient(135deg, #8b0000, #ff6f00);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      font-size: 1.2em;
+      font-weight: 400;
+      cursor: pointer;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    header .shop-now-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    header .shop-now-btn:hover::after {
+      width: 400px;
+      height: 400px;
+    }
+    header .shop-now-btn:hover {
+      background: linear-gradient(135deg, #e65a00, #ffab00);
+      transform: scale(1.05);
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #8b0000, #ff6f00);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.8em;
+      font-weight: 600;
+      margin: 20px auto;
+      max-width: 1200px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      animation: slideIn 1s ease-in-out forwards;
+      border: 2px solid #ffd54f;
+    }
+    .hero-banner::before, .hero-banner::after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: url('https://via.placeholder.com/100x100?text=Rakhi+Border') no-repeat center;
+      opacity: 0.3;
+    }
+    .hero-banner::before { top: 10px; left: 10px; }
+    .hero-banner::after { bottom: 10px; right: 10px; }
+    nav {
+      background: rgba(139, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .nav-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 25px;
+      font-size: 1.2em;
+      font-weight: 400;
+      position: relative;
+      transition: color 0.3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background: linear-gradient(90deg, #ffd54f, #ff6f00);
+      transition: width 0.3s;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    nav a:hover {
+      color: #ffd54f;
+    }
+    nav .cart-icon {
+      position: relative;
+    }
+    nav .cart-icon span {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: #ffd54f;
+      color: #4a2c00;
+      border-radius: 50%;
+      padding: 5px 10px;
+      font-size: 0.8em;
+    }
+    .hamburger {
+      display: none;
+      font-size: 1.5em;
+      color: white;
+      cursor: pointer;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .products, .offer-section, .gift-hampers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .product-card, .offer-card, .hamper-card {
+      background-color: #fff8e1;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      transition: transform 0.4s, box-shadow 0.4s;
+      opacity: 0;
+      animation: zoomIn 0.6s ease-in-out forwards;
+      border: 3px solid transparent;
+      border-image: linear-gradient(135deg, #8b0000, #ffd54f) 1;
+      position: relative;
+    }
+    .product-card .festival-tag, .offer-card .festival-tag, .hamper-card .festival-tag {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, #ff6f00, #ffd54f);
+      color: white;
+      padding: 6px 12px;
+      font-size: 0.9em;
+      border-radius: 8px;
+      animation: bounce 1.5s infinite;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .product-card:nth-child(1) { animation-delay: 0.1s; }
+    .product-card:nth-child(2) { animation-delay: 0.2s; }
+    .product-card:nth-child(3) { animation-delay: 0.3s; }
+    .product-card:nth-child(4) { animation-delay: 0.4s; }
+    .product-card:nth-child(5) { animation-delay: 0.5s; }
+    .product-card:nth-child(6) { animation-delay: 0.6s; }
+    .product-card:nth-child(7) { animation-delay: 0.7s; }
+    .product-card:nth-child(8) { animation-delay: 0.8s; }
+    .product-card:nth-child(9) { animation-delay: 0.9s; }
+    .offer-card { animation-delay: 1.0s; }
+    .hamper-card:nth-child(1) { animation-delay: 1.1s; }
+    .hamper-card:nth-child(2) { animation-delay: 1.2s; }
+    .hamper-card:nth-child(3) { animation-delay: 1.3s; }
+    @keyframes zoomIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .product-card:hover, .offer-card:hover, .hamper-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3), 0 0 15px #ffd54f;
+    }
+    .product-card:hover::after, .offer-card:hover::after, .hamper-card:hover::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 213, 79, 0.3), transparent);
+      pointer-events: none;
+    }
+    .product-card img, .offer-card img, .hamper-card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-bottom: 4px solid #ff6f00;
+    }
+    .product-card h3, .offer-card h3, .hamper-card h3 {
+      font-size: 1.7em;
+      font-weight: 600;
+      margin: 15px 0 10px;
+      padding: 0 15px;
+      color: #4a2c00;
+    }
+    .product-card p, .offer-card p, .hamper-card p {
+      color: #6b4e00;
+      font-size: 1.1em;
+      padding: 0 15px;
+      margin-bottom: 15px;
+      font-weight: 300;
+    }
+    .product-card button, .offer-card button, .hamper-card button {
+      background: linear-gradient(135deg, #ff6f00, #ffd54f);
+      color: white;
+      border: none;
+      padding: 14px;
+      width: 100%;
+      font-size: 1.1em;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    .product-card button::after, .offer-card button::after, .hamper-card button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    .product-card button:hover::after, .offer-card button:hover::after, .hamper-card button:hover::after {
+      width: 400px;
+      height: 400px;
+    }
+    .product-card button:hover, .offer-card button:hover, .hamper-card button:hover {
+      background: linear-gradient(135deg, #e65a00, #ffab00);
+      transform: scale(1.05);
+    }
+    .cart-section, .checkout-section, .order-confirmation {
+      background-color: #fff8e1;
+      padding: 40px;
+      margin-top: 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      animation: fadeIn 1.2s ease-in-out forwards;
+      animation-delay: 0.8s;
+      border: 3px solid transparent;
+      border-image: linear-gradient(135deg, #8b0000, #ffd54f) 1;
+    }
+    .cart-section h2, .checkout-section h2, .order-confirmation h2, .offer-section h2, .gift-hampers h2 {
+      font-size: 2.2em;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #4a2c00;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .cart-table th, .cart-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 2px solid #ffd54f;
+    }
+    .cart-table th {
+      background: linear-gradient(135deg, #ff6f00, #ffd54f);
+      color: white;
+    }
+    .cart-table button {
+      background: #8b0000;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .cart-table button:hover {
+      background: #6b4e00;
+    }
+    .cart-total {
+      font-size: 1.4em;
+      font-weight: 600;
+      text-align: right;
+      margin-top: 20px;
+      color: #4a2c00;
+    }
+    .checkout-btn, .whatsapp-btn, .continue-btn {
+      background: linear-gradient(135deg, #ff6f00, #ffd54f);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: inline-block;
+      margin: 10px;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .checkout-btn::after, .whatsapp-btn::after, .continue-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    .checkout-btn:hover::after, .whatsapp-btn:hover::after, .continue-btn:hover::after {
+      width: 400px;
+      height: 400px;
+    }
+    .checkout-btn:hover, .whatsapp-btn:hover, .continue-btn:hover {
+      background: linear-gradient(135deg, #e65a00, #ffab00);
+    }
+    .checkout-section form, .order-confirmation form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .checkout-section input, .checkout-section textarea {
+      padding: 14px;
+      font-size: 1.1em;
+      border: 2px solid #ffd54f;
+      border-radius: 8px;
+      width: 100%;
+      background-color: #fff8e1;
+      color: #4a2c00;
+      transition: border-color 0.3s;
+    }
+    .checkout-section input:focus, .checkout-section textarea:focus {
+      border-color: #ff6f00;
+      outline: none;
+    }
+    .checkout-section button {
+      background: linear-gradient(135deg, #ff6f00, #ffd54f);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .checkout-section button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    .checkout-section button:hover::after {
+      width: 400px;
+      height: 400px;
+    }
+    .checkout-section button:hover {
+      background: linear-gradient(135deg, #e65a00, #ffab00);
+    }
+    .order-confirmation p {
+      font-size: 1.3em;
+      font-weight: 300;
+      margin: 15px 0;
+      color: #4a2c00;
+    }
+    .contact {
+      background-color: #fff8e1;
+      padding: 40px;
+      margin-top: 50px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      animation: fadeIn 1.2s ease-in-out forwards;
+      animation-delay: 0.8s;
+      border: 3px solid transparent;
+      border-image: linear-gradient(135deg, #8b0000, #ffd54f) 1;
+    }
+    .contact h2 {
+      font-size: 2.2em;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #4a2c00;
+    }
+    .contact p {
+      font-size: 1.3em;
+      font-weight: 300;
+      margin: 15px 0;
+      color: #4a2c00;
+    }
+    footer {
+      background: linear-gradient(135deg, #8b0000, #ff6f00);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+      font-weight: 300;
+      position: relative;
+      background-image: url('https://via.placeholder.com/1920x100?text=Rakhi+Pattern');
+      background-size: cover;
+      background-position: center;
+    }
+    footer a {
+      color: #ffd54f;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 1.2em;
+      transition: transform 0.3s;
+    }
+    footer a:hover {
+      transform: scale(1.2);
+    }
+    @media (max-width: 600px) {
+      header {
+        padding: 60px 20px;
+      }
+      header h1 {
+        font-size: 2.2em;
+      }
+      header .tagline-slider {
+        font-size: 1.1em;
+        min-height: 25px;
+      }
+      header .shop-now-btn {
+        padding: 12px 20px;
+        font-size: 1em;
+      }
+      .hero-banner {
+        font-size: 1.3em;
+        padding: 15px;
+        border-radius: 12px;
+      }
+      nav {
+        padding: 10px;
+      }
+      nav .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: rgba(139, 0, 0, 0.95);
+        padding: 20px;
+      }
+      nav .nav-links.active {
+        display: flex;
+      }
+      nav a {
+        margin: 10px 0;
+        font-size: 1.1em;
+      }
+      .hamburger {
+        display: block;
+        position: absolute;
+        right: 20px;
+        top: 15px;
+      }
+      .products, .offer-section, .gift-hampers {
+        grid-template-columns: 1fr;
+      }
+      .product-card img, .offer-card img, .hamper-card img {
+        height: 180px;
+      }
+      .product-card h3, .offer-card h3, .hamper-card h3 {
+        font-size: 1.4em;
+      }
+      .product-card p, .offer-card p, .hamper-card p {
+        font-size: 1em;
+      }
+      .checkout-btn, .whatsapp-btn, .continue-btn, .checkout-section button {
+        padding: 16px;
+        font-size: 1em;
+      }
+      .cart-section, .checkout-section, .order-confirmation, .contact {
+        padding: 20px;
+      }
+      .cart-table th, .cart-table td {
+        padding: 10px;
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mittika</h1>
+    <div class="tagline-slider">
+      <div class="tagline">Celebrate the Bond of Love</div>
+      <div class="tagline">Exclusive Rakhi Gifts & Hampers</div>
+      <div class="tagline">Light Up Your Puja with Mittika</div>
+    </div>
+    <button class="shop-now-btn" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Shop Now</button>
+  </header>
+  <div class="hero-banner">
+    Raksha Bandhan Special: Exclusive Gifts & Hampers!
+  </div>
+  <nav>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#products">Products</a>
+      <a href="#offers">Special Offers</a>
+      <a href="#gift-hampers">Gift Hampers</a>
+      <a href="#cart" class="cart-icon">Cart (<span id="cart-count">0</span>)</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+  <div class="container">
+    <section id="products">
+      <h2>Our Sacred Offerings</h2>
+      <div class="products">
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product1.png" alt="1. Rose Incense">
+          <h3>1. Rose Incense</h3>
+          <p>Price: ₹60 (20 Sticks)</p>
+          <button onclick="addToCart('1. Rose Incense', 60)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product2.png" alt="2. Handcrafted Clay Diya">
+          <h3>2. Handcrafted Clay Diya</h3>
+          <p>Price: ₹100 (10 Pieces)</p>
+          <button onclick="addToCart('2. Handcrafted Clay Diya', 100)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product3.png" alt="3. Kumkum Powder">
+          <h3>3. Kumkum Powder</h3>
+          <p>Price: ₹40 (100g)</p>
+          <button onclick="addToCart('3. Kumkum Powder', 40)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product4.png" alt="4. Camphor Tablets">
+          <h3>4. Camphor Tablets</h3>
+          <p>Price: ₹80 (50g)</p>
+          <button onclick="addToCart('4. Camphor Tablets', 80)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product5.png" alt="5. Puja Thali">
+          <h3>5. Puja Thali</h3>
+          <p>Price: ₹250 (1 Piece)</p>
+          <button onclick="addToCart('5. Puja Thali', 250)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product6.png" alt="6. Sandalwood Incense">
+          <h3>6. Sandalwood Incense</h3>
+          <p>Price: ₹70 (20 Sticks)</p>
+          <button onclick="addToCart('6. Sandalwood Incense', 70)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product7.png" alt="7. Decorative Rakhi (Set of 2)">
+          <h3>7. Decorative Rakhi (Set of 2)</h3>
+          <p>Price: ₹150</p>
+          <button onclick="addToCart('7. Decorative Rakhi (Set of 2)', 150)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product8.png" alt="8. Roli & Chawal Set">
+          <h3>8. Roli & Chawal Set</h3>
+          <p>Price: ₹50 (50g)</p>
+          <button onclick="addToCart('8. Roli & Chawal Set', 50)">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <span class="festival-tag">Raksha Bandhan Offer</span>
+          <img src="product9.png" alt="9. Brass Puja Bell">
+          <h3>9. Brass Puja Bell</h3>
+          <p>Price: ₹200</p>
+          <button onclick="addToCart('9. Brass Puja Bell', 200)">Add to Cart</button>
+        </div>
+      </div>
+    </section>
+    <section id="offers" class="offer-section">
+      <h2>Raksha Bandhan Special Combo</h2>
+      <div class="offer-card">
+        <span class="festival-tag">Raksha Bandhan Offer</span>
+        <img src="combo1.png" alt="1. Raksha Bandhan Combo">
+        <h3>1. Raksha Bandhan Combo</h3>
+        <p>4 Diyas + 1 Rose Incense + 1 Match Box</p>
+        <p>Price: ₹199</p>
+        <button onclick="addToCart('1. Raksha Bandhan Combo (4 Diyas + 1 Rose Incense + 1 Match Box)', 199)">Add to Cart</button>
+      </div>
+    </section>
+    <section id="gift-hampers" class="gift-hampers">
+      <h2>Raksha Bandhan Gift Hampers</h2>
+      <div class="hamper-card">
+        <span class="festival-tag">Raksha Bandhan Offer</span>
+        <img src="hamper1.png" alt="1. Raksha Bandhan Premium Hamper">
+        <h3>1. Raksha Bandhan Premium Hamper</h3>
+        <p>2 Decorative Rakhis, 1 Puja Thali, Roli & Chawal, 1 Rose Incense, 200g Soan Papdi</p>
+        <p>Price: ₹499</p>
+        <button onclick="addToCart('1. Raksha Bandhan Premium Hamper', 499)">Add to Cart</button>
+      </div>
+      <div class="hamper-card">
+        <span class="festival-tag">Raksha Bandhan Offer</span>
+        <img src="hamper2.png" alt="2. Sibling Love Combo">
+        <h3>2. Sibling Love Combo</h3>
+        <p>1 Decorative Rakhi, 1 Roli & Chawal Set, 1 Sandalwood Incense, 1 Small Diya</p>
+        <p>Price: ₹299</p>
+        <button onclick="addToCart('2. Sibling Love Combo', 299)">Add to Cart</button>
+      </div>
+      <div class="hamper-card">
+        <span class="festival-tag">Raksha Bandhan Offer</span>
+        <img src="hamper3.png" alt="3. Eco-Friendly Rakhi Gift Set">
+        <h3>3. Eco-Friendly Rakhi Gift Set</h3>
+        <p>1 Plantable Rakhi, 1 Roli & Chawal Set, 1 Rose Incense, 1 Jute Pouch</p>
+        <p>Price: ₹399</p>
+        <button onclick="addToCart('3. Eco-Friendly Rakhi Gift Set', 399)">Add to Cart</button>
+      </div>
+    </section>
+    <section id="cart" class="cart-section" style="display: none;">
+      <h2>Your Cart</h2>
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="cart-items"></tbody>
+      </table>
+      <p class="cart-total">Total: ₹<span id="cart-total">0</span></p>
+      <button class="checkout-btn" onclick="showCheckout()">Proceed to Checkout</button>
+    </section>
+    <section id="checkout" class="checkout-section" style="display: none;">
+      <h2>Checkout</h2>
+      <form id="checkout-form">
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+        <textarea id="address" placeholder="Delivery Address" required></textarea>
+        <button type="submit">Place Order</button>
+      </form>
+    </section>
+    <section id="order-confirmation" class="order-confirmation" style="display: none;">
+      <h2>Order Confirmed!</h2>
+      <p>Thank you for your order. We have sent your order details to our WhatsApp and will contact you soon for confirmation.</p>
+      <p id="order-details"></p>
+      <button class="whatsapp-btn" onclick="sendToWhatsApp()">Resend Order to WhatsApp</button>
+      <button class="continue-btn" onclick="backToHome()">Continue Shopping</button>
+    </section>
+    <section id="contact" class="contact">
+      <h2>Contact Us</h2>
+      <p>Phone: +91 75174 20170 (Orders)</p>
+      <p>Phone: +91 99608 24574</p>
+    </section>
+  </div>
+  <footer>
+    <p>© 2025 Mittika. All Rights Reserved.</p>
+    <div>
+      <a href="https://wa.me/+917517420170">WhatsApp</a>
+      <a href="https://instagram.com/mittika">Instagram</a>
+    </div>
+  </footer>
+  <script>
+    let cart = [];
+    function addToCart(productName, price) {
+      const existingItem = cart.find(item => item.name === productName);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ name: productName, price: price, quantity: 1 });
+      }
+      updateCart();
+    }
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+    function updateQuantity(index, value) {
+      if (value < 1) return;
+      cart[index].quantity = parseInt(value);
+      updateCart();
+    }
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      const cartTotal = document.getElementById('cart-total');
+      const cartCount = document.getElementById('cart-count');
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        cartItems.innerHTML += `
+          <tr>
+            <td>${item.name}</td>
+            <td>₹${item.price}</td>
+            <td><input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)"></td>
+            <td>₹${itemTotal}</td>
+            <td><button onclick="removeFromCart(${index})">Remove</button></td>
+          </tr>
+        `;
+      });
+      cartTotal.textContent = total;
+      cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart').style.display = cart.length ? 'block' : 'none';
+    }
+    function showCheckout() {
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+      document.getElementById('cart').style.display = 'none';
+      document.getElementById('checkout').style.display = 'block';
+      document.getElementById('products').style.display = 'none';
+      document.getElementById('offers').style.display = 'none';
+      document.getElementById('gift-hampers').style.display = 'none';
+      document.getElementById('order-confirmation').style.display = 'none';
+    }
+    function sendToWhatsApp() {
+      const orderDetails = document.getElementById('order-details').innerText;
+      const encodedDetails = encodeURIComponent(`New Order (Raksha Bandhan Offer):\n${orderDetails}`);
+      const whatsappNumber = '+917517420170';
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodedDetails}`, '_blank');
+    }
+    function backToHome() {
+      document.getElementById('order-confirmation').style.display = 'none';
+      document.getElementById('products').style.display = 'block';
+      document.getElementById('offers').style.display = 'block';
+      document.getElementById('gift-hampers').style.display = 'block';
+      document.getElementById('cart').style.display = 'none';
+      document.getElementById('checkout').style.display = 'none';
+    }
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      navLinks.classList.toggle('active');
+    }
+    document.getElementById('checkout-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const orderDetails = cart.map(item => `${item.name} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const orderSummary = `Name: ${name}\nPhone: ${phone}\nLocation: ${address}\nItems: ${orderDetails}\nTotal: ₹${total}`;
+      document.getElementById('order-details').innerText = orderSummary;
+      document.getElementById('checkout').style.display = 'none';
+      document.getElementById('order-confirmation').style.display = 'block';
+      const encodedDetails = encodeURIComponent(`New Order (Raksha Bandhan Offer):\n${orderSummary}`);
+      const whatsappNumber = '+917517420170';
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodedDetails}`, '_blank');
+      cart = [];
+      updateCart();
+      document.getElementById('checkout-form').reset();
+    });
+  </script>
+</body>
+</html>
