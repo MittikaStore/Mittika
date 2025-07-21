@@ -1574,3 +1574,321 @@
         continueBtn.disabled = true;
         updateCheckoutSummary();
         return;
+      if (!/^\d{6}$/.test(pincode)) {
+        pincodeMessage.textContent = 'Please enter a valid 6-digit pincode.';
+        pincodeMessage.classList.add('error');
+        isPincodeValid = false;
+        continueBtn.disabled = true;
+        updateCheckoutSummary();
+        return;
+      }
+
+      if (validPincodes.includes(pincode)) {
+        const formattedDate = deliveryDate.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' });
+        pincodeMessage.textContent = `Deliverable by ${formattedDate}`;
+        pincodeMessage.classList.remove('error');
+        isPincodeValid = true;
+        selectedPincode = pincode;
+        continueBtn.disabled = !validateDeliveryForm();
+        updateCheckoutSummary();
+      } else {
+        pincodeMessage.textContent = 'Not deliverable to this pincode';
+        pincodeMessage.classList.add('error');
+        isPincodeValid = false;
+        continueBtn.disabled = true;
+        updateCheckoutSummary();
+      }
+    }
+
+    function validateDeliveryForm() {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const phoneRegex = /^\d{10}$/;
+      return isPincodeValid && name && phoneRegex.test(phone) && address;
+    }
+
+    function updateCheckoutSummary() {
+      const itemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      let deliveryCharge = 0;
+      let codFee = paymentMethod === 'cod' ? COD_FEE : 0;
+
+      if (isPincodeValid && selectedPincode) {
+        const distance = Math.abs(parseInt(selectedPincode) - parseInt(PICKUP_PINCODE));
+        deliveryCharge = deliveryType === 'express' ? EXPRESS_BASE + (distance * EXPRESS_PER_KM) : STANDARD_BASE + (distance * STANDARD_PER_KM);
+      }
+
+      const total = subtotal + deliveryCharge + codFee;
+
+      document.getElementById('summary-items-count').textContent = itemsCount;
+      document.getElementById('summary-subtotal').textContent = subtotal;
+      document.getElementById('summary-delivery').textContent = deliveryCharge;
+      document.getElementById('summary-total').textContent = total;
+
+      document.getElementById('summary-items-count-2').textContent = itemsCount;
+      document.getElementById('summary-subtotal-2').textContent = subtotal;
+      document.getElementById('summary-delivery-2').textContent = deliveryCharge;
+      document.getElementById('summary-total-2').textContent = total;
+
+      document.getElementById('summary-items-count-3').textContent = itemsCount;
+      document.getElementById('summary-subtotal-3').textContent = subtotal;
+      document.getElementById('summary-delivery-3').textContent = deliveryCharge;
+      document.getElementById('summary-cod-fee').textContent = codFee;
+      document.getElementById('summary-total-3').textContent = total;
+
+      document.getElementById('checkout-product-total').textContent = subtotal;
+      document.getElementById('delivery-charge').textContent = deliveryCharge;
+      document.getElementById('cod-fee').textContent = codFee;
+      document.getElementById('final-total').textContent = total;
+
+      const placeOrderBtn = document.getElementById('place-order-btn');
+      placeOrderBtn.disabled = !paymentMethod || (paymentMethod === 'upi' && !document.getElementById('upi-id').value.trim()) ||
+                              (paymentMethod === 'card' && (!document.getElementById('card-number').value.trim() ||
+                                                            !document.getElementById('card-expiry').value.trim() ||
+                                                            !document.getElementById('card-cvv').value.trim())) ||
+                              (paymentMethod === 'netbanking' && !document.getElementById('bank-select').value);
+    }
+
+    function showCheckout() {
+      document.getElementById('cart').style.display = 'none';
+      document.getElementById('checkout').style.display = 'block';
+      document.getElementById('step-delivery').classList.add('active');
+      document.getElementById('step-summary').classList.remove('active');
+      document.getElementById('step-payment').classList.remove('active');
+      document.getElementById('delivery-details').style.display = 'block';
+      document.getElementById('order-summary').style.display = 'none';
+      document.getElementById('payment').style.display = 'none';
+      updateCheckoutSummary();
+    }
+
+    function showOrderSummary() {
+      const summaryItems = document.getElementById('summary-items');
+      summaryItems.innerHTML = '';
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        summaryItems.innerHTML += `
+          <tr>
+            <td><img src="${item.image}" alt="${item.name}"><br>${item.name}</td>
+            <td>₹${item.price}</td>
+            <td>${item.quantity}</td>
+            <td>₹${itemTotal}</td>
+          </tr>
+        `;
+      });
+      document.getElementById('step-delivery').classList.remove('active');
+      document.getElementById('step-summary').classList.add('active');
+      document.getElementById('step-payment').classList.remove('active');
+      document.getElementById('delivery-details').style.display = 'none';
+      document.getElementById('order-summary').style.display = 'block';
+      document.getElementById('payment').style.display = 'none';
+      updateCheckoutSummary();
+    }
+
+    function showPayment() {
+      document.getElementById('step-delivery').classList.remove('active');
+      document.getElementById('step-summary').classList.remove('active');
+      document.getElementById('step-payment').classList.add('active');
+      document.getElementById('delivery-details').style.display = 'none';
+      document.getElementById('order-summary').style.display = 'none';
+      document.getElementById('payment').style.display = 'block';
+      updateCheckoutSummary();
+    }
+
+    function backToDelivery() {
+      document.getElementById('step-delivery').classList.add('active');
+      document.getElementById('step-summary').classList.remove('active');
+      document.getElementById('step-payment').classList.remove('active');
+      document.getElementById('delivery-details').style.display = 'block';
+      document.getElementById('order-summary').style.display = 'none';
+      document.getElementById('payment').style.display = 'none';
+    }
+
+    function backToSummary() {
+      document.getElementById('step-delivery').classList.remove('active');
+      document.getElementById('step-summary').classList.add('active');
+      document.getElementById('step-payment').classList.remove('active');
+      document.getElementById('delivery-details').style.display = 'none';
+      document.getElementById('order-summary').style.display = 'block';
+      document.getElementById('payment').style.display = 'none';
+    }
+
+    function validatePaymentForm() {
+      const paymentError = document.getElementById('payment-error');
+      paymentError.style.display = 'none';
+
+      if (!paymentMethod) {
+        paymentError.textContent = 'Please select a payment method.';
+        paymentError.style.display = 'block';
+        return false;
+      }
+
+      if (paymentMethod === 'upi' && !document.getElementById('upi-id').value.trim()) {
+        paymentError.textContent = 'Please enter a valid UPI ID.';
+        paymentError.style.display = 'block';
+        return false;
+      }
+
+      if (paymentMethod === 'card') {
+        const cardNumber = document.getElementById('card-number').value.trim();
+        const cardExpiry = document.getElementById('card-expiry').value.trim();
+        const cardCvv = document.getElementById('card-cvv').value.trim();
+        if (!cardNumber || !cardExpiry || !cardCvv) {
+          paymentError.textContent = 'Please fill in all card details.';
+          paymentError.style.display = 'block';
+          return false;
+        }
+      }
+
+      if (paymentMethod === 'netbanking' && !document.getElementById('bank-select').value) {
+        paymentError.textContent = 'Please select a bank.';
+        paymentError.style.display = 'block';
+        return false;
+      }
+
+      return true;
+    }
+
+    function placeOrder() {
+      if (!validatePaymentForm()) return;
+
+      const orderNumber = Math.floor(100000 + Math.random() * 900000);
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + (deliveryType === 'express' ? 1 : selectedPincode === '421302' ? 2 : 3));
+      const formattedDate = deliveryDate.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' });
+
+      orderDetails = {
+        orderNumber: orderNumber,
+        items: cart.map(item => ({ name: item.name, price: item.price, quantity: item.quantity, image: item.image })),
+        subtotal: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        deliveryCharge: document.getElementById('delivery-charge').textContent,
+        codFee: document.getElementById('cod-fee').textContent,
+        total: document.getElementById('final-total').textContent,
+        deliveryType: deliveryType,
+        estimatedDelivery: formattedDate,
+        deliveryDetails: {
+          name: document.getElementById('name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          address: document.getElementById('address').value.trim(),
+          pincode: selectedPincode
+        },
+        paymentMethod: paymentMethod
+      };
+
+      document.getElementById('order-number').textContent = orderNumber;
+      document.getElementById('estimated-delivery').textContent = formattedDate;
+      document.getElementById('order-details').textContent = `Items: ${cart.map(item => `${item.name} (Qty: ${item.quantity})`).join(', ')}`;
+      document.getElementById('delivery-details-text').textContent = `Delivery to: ${orderDetails.deliveryDetails.name}, ${orderDetails.deliveryDetails.address}, ${orderDetails.deliveryDetails.pincode}, Phone: ${orderDetails.deliveryDetails.phone}`;
+      document.getElementById('payment-details-text').textContent = `Payment Method: ${paymentMethod.toUpperCase()}${paymentMethod === 'cod' ? ' (₹10 COD Fee)' : ''}`;
+      
+      document.getElementById('checkout').style.display = 'none';
+      document.getElementById('order-confirmation').style.display = 'block';
+      sendToWhatsApp();
+      cart = [];
+      updateCart();
+    }
+
+    function sendToWhatsApp() {
+      const message = `Order #${orderDetails.orderNumber}\nItems: ${orderDetails.items.map(item => `${item.name} (Qty: ${item.quantity})`).join(', ')}\nSubtotal: ₹${orderDetails.subtotal}\nDelivery: ₹${orderDetails.deliveryCharge}\nCOD Fee: ₹${orderDetails.codFee}\nTotal: ₹${orderDetails.total}\nDelivery to: ${orderDetails.deliveryDetails.name}, ${orderDetails.deliveryDetails.address}, ${orderDetails.deliveryDetails.pincode}\nPhone: ${orderDetails.deliveryDetails.phone}\nPayment: ${orderDetails.paymentMethod.toUpperCase()}\nEstimated Delivery: ${orderDetails.estimatedDelivery}`;
+      const whatsappUrl = `https://wa.me/+917517420170?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    function backToHome() {
+      document.getElementById('order-confirmation').style.display = 'none';
+      document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function prevSlide() {
+      const slides = document.getElementById('carousel-slides');
+      const totalSlides = slides.children.length;
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function nextSlide() {
+      const slides = document.getElementById('carousel-slides');
+      const totalSlides = slides.children.length;
+      currentSlide = (currentSlide + 1) % totalSlides;
+      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      const hamburger = document.querySelector('.hamburger');
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    }
+
+    document.getElementById('search').addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      const products = document.querySelectorAll('.product-card, .offer-card, .hamper-card');
+      products.forEach(product => {
+        const name = product.querySelector('h3').textContent.toLowerCase();
+        product.style.display = name.includes(query) ? 'block' : 'none';
+      });
+    });
+
+    document.getElementById('category-filter').addEventListener('change', function() {
+      const category = this.value;
+      const products = document.querySelectorAll('.product-card, .offer-card, .hamper-card');
+      products.forEach(product => {
+        const productCategory = product.getAttribute('data-category');
+        product.style.display = category === 'all' || productCategory === category ? 'block' : 'none';
+      });
+    });
+
+    document.getElementById('sort-filter').addEventListener('change', function() {
+      const sort = this.value;
+      const productList = document.getElementById('product-list');
+      const products = Array.from(productList.querySelectorAll('.product-card'));
+      if (sort === 'price-low') {
+        products.sort((a, b) => parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price')));
+      } else if (sort === 'price-high') {
+        products.sort((a, b) => parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price')));
+      }
+      productList.innerHTML = '';
+      products.forEach(product => productList.appendChild(product));
+    });
+
+    document.getElementById('delivery-form').addEventListener('input', function() {
+      const continueBtn = document.getElementById('continue-btn');
+      continueBtn.disabled = !validateDeliveryForm();
+    });
+
+    document.getElementById('delivery-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (validateDeliveryForm()) {
+        showOrderSummary();
+      }
+    });
+
+    document.getElementById('payment-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      placeOrder();
+    });
+
+    document.querySelectorAll('input[name="delivery"]').forEach(input => {
+      input.addEventListener('change', function() {
+        deliveryType = this.value;
+        checkCheckoutPincode();
+      });
+    });
+
+    document.querySelectorAll('input[name="payment"]').forEach(input => {
+      input.addEventListener('change', function() {
+        paymentMethod = this.value;
+        document.querySelectorAll('.payment-details').forEach(detail => detail.classList.remove('active'));
+        if (paymentMethod) {
+          document.getElementById(`${paymentMethod}-details`)?.classList.add('active');
+        }
+        updateCheckoutSummary();
+      });
+    });
+
+    document.getElementById('payment-form').addEventListener('input', function() {
+      updateCheckoutSummary();
+    });
+  </script>
+</body>
+</html>
